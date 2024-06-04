@@ -30,6 +30,8 @@ jobs:
           repository: Vector35/binaryninja-api
           ref: ${{ inputs.binary_ninja_api_commit }}
           path: .binaryninja-api
+      - name: Install clang-format
+        run: brew install clang-format
       - name: Run regenerate-api-stubs.sh
         run: ./binaryninja/stubs/regenerate-api-stubs.sh .binaryninja-api
       - name: Build BinExport
