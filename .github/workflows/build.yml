@@ -3,6 +3,10 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      binexport_commit:
+        description: "BinExport commit hash"
+        type: string
+        default: "HEAD"
       binary_ninja_api_commit:
         description: "Binary Ninja API commit hash"
         type: string
@@ -17,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: google/binexport
+          ref: ${{ github.event.inputs.binexport_commit }}
       - name: Build BinExport
         run: |
           mkdir -p build_mac
