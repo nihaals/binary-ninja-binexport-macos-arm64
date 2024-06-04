@@ -6,8 +6,6 @@ on:
       binexport_commit:
         description: "BinExport commit hash"
         type: string
-        default: "HEAD"
-        required: true
       binary_ninja_api_commit:
         description: "Binary Ninja API commit hash"
         type: string
