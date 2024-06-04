@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      binary_ninja_api_commit:
+        description: "Binary Ninja API commit hash"
+        type: string
+        required: true
+
+jobs:
+  build:
+    runs-on: macos-14
+    name: Build BinExport Binary Ninja plugin
+    steps:
+      - name: Checkout BinExport
+        uses: actions/checkout@v4
+        with:
+          repository: google/binexport
+      - name: Build BinExport
+        run: |
+          mkdir -p build_mac
+          cd build_mac
+          cmake .. \
+              -DCMAKE_BUILD_TYPE=Release \
+              "-DCMAKE_INSTALL_PREFIX=${PWD}" \
+              -DBINEXPORT_ENABLE_IDAPRO=OFF \
+              -DBINEXPORT_ENABLE_BINARYNINJA=ON
+          cmake --build . --config Release -- "-j$(sysctl -n hw.logicalcpu)"
+          ctest --build-config Release --output-on-failure
+          cmake --install . --config Release --strip
+      - name: Tree
+        run: |
+          brew install tree
+          tree build_mac
