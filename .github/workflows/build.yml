@@ -22,6 +22,17 @@ jobs:
         with:
           repository: google/binexport
           ref: ${{ github.event.inputs.binexport_commit }}
+      - name: Update BinExportDeps.cmake
+        # Current hardcoded hash, fragile
+        run: sed -i "" 's/6e2b374dece03f6fb48a1615fa2bfee809ec2157/${{ inputs.binary_ninja_api_commit }}/' cmake/BinExportDeps.cmake
+      - name: Checkout Binary Ninja API
+        uses: actions/checkout@v4
+        with:
+          repository: Vector35/binaryninja-api
+          ref: ${{ inputs.binary_ninja_api_commit }}
+          path: .binaryninja-api
+      - name: Run regenerate-api-stubs.sh
+        run: ./binaryninja/stubs/regenerate-api-stubs.sh .binaryninja-api
       - name: Build BinExport
         run: |
           mkdir -p build_mac
